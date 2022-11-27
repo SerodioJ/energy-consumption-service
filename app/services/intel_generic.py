@@ -20,7 +20,7 @@ class IntelGeneric(PAPIBase):
         self.default_eventset = self.create_eventset(self.events)
         self.regions = {}
         with open("regions.csv", "w") as f:
-            f.write("name,uuid,start,end\n")
+            f.write("name,uuid,start,end,energy(J)\n")
 
     def plot(self):
         f = open("power.csv", "a")
@@ -77,13 +77,14 @@ class IntelGeneric(PAPIBase):
         region = self.regions.pop(region_uuid, None)
         if region is None:
             return None
+        energy =  (end_m - region["start"][1]) / 1e6
         result = {
-            "energy": (end_m - region["start"][1]) / 1e6,
+            "energy": energy,
             "time": end_t - region["start"][0],
         }
         with open("regions.csv", "a") as f:
             f.write(
-                f"{region['name']},{str(region_uuid)},{region['start'][0]},{end_t}\n"
+                f"{region['name']},{str(region_uuid)},{region['start'][0]},{end_t},{energy}\n"
             )
 
         if intermediate:

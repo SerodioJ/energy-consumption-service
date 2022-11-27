@@ -58,7 +58,7 @@ class LoadBase(ABC):
     def __init__(self):
         self.regions = {}
         with open("regions.csv", "w") as f:
-            f.write("name,uuid,start,end\n")
+            f.write("name,uuid,start,end,energy(J)\n")
 
     def start_measurements(self, plot=True):
         if plot:
@@ -93,12 +93,13 @@ class LoadBase(ABC):
         region["ts"].append(end_t)
         region["power"].append(end_m)
         n_time = np.array(region["ts"]) - region["ts"][0]
+        energy = np.trapz(region["power"], n_time)
         result = {
-            "energy": np.trapz(region["power"], n_time),
+            "energy": energy,
             "time": end_t - region["ts"][0],
         }
         with open("regions.csv", "a") as f:
-            f.write(f"{region['name']},{str(region_uuid)},{region['ts'][0]},{end_t}\n")
+            f.write(f"{region['name']},{str(region_uuid)},{region['ts'][0]},{end_t},{energy}\n")
 
         if intermediate:
             result["power"] = region["power"]
