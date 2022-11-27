@@ -5,6 +5,7 @@ from uuid import uuid4
 import numpy as np
 
 from .base import PAPIBase
+from settings import settings
 
 
 class IntelGeneric(PAPIBase):
@@ -27,7 +28,7 @@ class IntelGeneric(PAPIBase):
         previous_t = perf_counter()
         f.write(f"{previous_t},{previous},\n")
         f.close()
-        sleep(0.5)
+        sleep(settings.sampling_rate)
         while self.run:
             f = open("power.csv", "a")
             current = self.read(self.default_eventset)[0]
@@ -40,7 +41,7 @@ class IntelGeneric(PAPIBase):
             previous = current
             previous_t = current_t
             f.close()
-            sleep(0.5)
+            sleep(settings.sampling_rate)
         f.close()
 
     def start_measurements(self, plot=False):

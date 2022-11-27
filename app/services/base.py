@@ -7,6 +7,8 @@ from uuid import uuid4
 import numpy as np
 from pypapi import papi_low
 
+from settings import settings
+
 
 class PAPIBase(ABC):
     def __init__(self):
@@ -115,7 +117,7 @@ class LoadBase(ABC):
             previous = current
             previous_t = current_t
             f.close()
-            sleep(0.5)
+            sleep(settings.sampling_rate)
         f.close()
 
     def get_power(self):
